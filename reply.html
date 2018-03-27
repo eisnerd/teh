@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
+    <div id="player"></div>
+
+    <script>
+      // 2. This code loads the IFrame Player API code asynchronously.
+      var tag = document.createElement('script');
+
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      // 3. This function creates an <iframe> (and YouTube player)
+      //    after the API code downloads.
+      var player;
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+          height: window.innerHeight,
+          width: window.innerHeight*4/3,
+          videoId: '-ksblMiliA8',
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }
+        });
+      }
+
+      var id = 0, nextId = 0, nextDuration = 0;
+      var cue = {
+        S: [4, 8.9],
+        A: [9, 14.5],
+        T: [15, 20],
+        I: [21, 25.9],
+        P: [27, 31.4],
+        N: [32, 36.5],
+        C: [37, 42],
+        E: [43, 48],
+        H: [49, 54],
+        R: [55, 60.5],
+        M: [61, 66.2],
+        D: [67, 72.5],
+        G: [73, 78.5],
+        O: [80, 85],
+        U: [85, 91.8],
+        L: [92, 98],
+        F: [98, 105],
+        B: [107, 112.2],
+        AI: [113, 119],
+        J: [119, 125.8],
+        OA: [126, 132],
+        IE: [134, 140],
+        EE: [141, 147],
+        OR: [147, 154],
+        Z: [155, 160],
+        W: [161, 168],
+        NG: [167, 175],
+        V: [176, 182],
+        OO: [181, 189],
+        MOON: [189, 195],
+        Y: [196, 201.2],
+        X: [202, 208],
+        CH: [209, 215],
+/*        
+        : [, ],
+        : [, ],
+        : [, ],
+        : [, ],
+        : [, ],
+*/
+      };
+      // 4. The API will call this function when the video player is ready.
+      function onPlayerReady(event) {
+        //event.target.playVideo();
+      }
+
+      // 5. The API calls this function when the player's state changes.
+      //    The function indicates that when playing a video (state=1),
+      //    the player should play for six seconds and then stop.
+      function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.PLAYING) {
+          var _nextId = nextId;
+          setTimeout(function() {
+            if (id == _nextId)
+              player.pauseVideo();
+          }, nextDuration);
+        }
+      }
+
+      document.onkeydown = function(evt) {
+        evt = evt || window.event;
+        var next = cue[String.fromCharCode(evt.keyCode)];
+        if (next) {
+            nextId = ++id;
+            nextDuration = 1000*(next[1] - next[0]);
+            player.seekTo(next[0], true);
+            player.playVideo();
+        }
+      };
+    </script>
+  </body>
+</html>
